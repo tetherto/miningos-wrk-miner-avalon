@@ -1,6 +1,6 @@
 # miningos-wrk-miner-avalon
 
-A Node.js-based worker service for managing and monitoring Avalon cryptocurrency mining devices. This implementation provides comprehensive control over Avalon miners, including the A1346 model, with support for monitoring, configuration, and remote management.
+A worker service for managing and monitoring Avalon cryptocurrency mining devices. This implementation provides comprehensive control over Avalon miners, including the A1346 model, with support for monitoring, configuration, and remote management.
 
 ## Table of Contents
 
@@ -23,7 +23,7 @@ This worker extends the abstract miner worker framework to provide specific func
 
 ## Object Model
 
-The following is a fragment of [MiningOS object model](https://docs.mos.tether.io/) that contains the concrete classes representing **Avalon miner workers** (highlighted in blue), one generically representing any model of the brand, and one child specifically representing model A1346. The rounded nodes reprsent abstract classes while the square nodes represent concrete classes:
+The following is a fragment of [MiningOS object model](https://docs.mos.tether.io/) that contains the concrete classes representing **Avalon miner workers** (highlighted in blue), one generically representing any model of the brand, and one child class specifically representing model A1346. The rounded nodes reprsent abstract classes while the square nodes represent concrete classes:
 
 ```mermaid
 ---
@@ -56,10 +56,6 @@ flowchart RL
     style miningos-wrk-miner-avalon-a1346 fill:#005,stroke-width:4px,color:white
 ```
 
-> Accordign to UML notation, abstract classes have their names in Italic. 'Stadium shape' applied for abstract class nodes for better visualization.
-
-> Horizontal display was chosen over more conventional vertical one merely for purposes of better layout.
-
 Check out [miningos-tpl-wrk-miner](https://github.com/tetherto/miningos-tpl-wrk-miner/) for more information about parent classes.
 
 ## Features
@@ -79,19 +75,12 @@ Check out [miningos-tpl-wrk-miner](https://github.com/tetherto/miningos-tpl-wrk-
 - Configure fan speed
 - Factory reset
 - Update passwords
-- Set DNS servers
+- Set Mining pool server urls
 - Suspend/resume mining
 
 ## Requirements
 
-- Node.js (version compatible with ES6+)
-- Network access to Avalon miners (default port: 4028)
-- Dependencies:
-  - `bfx-svc-boot-js`
-  - `miningos-tpl-wrk-miner`
-  - `svc-facs-tcp`
-  - `async`
-  - `assert`
+- Node.js (>= 20.0)
 
 ## Installation
 
@@ -173,13 +162,7 @@ Once registered, miners can be controlled through the `queryThing` RPC method:
   "params": {
     "id": "miner-id",
     "method": "setPools",
-    "params": [[
-      {
-        "url": "stratum+tcp://pool.example.com:3333",
-        "worker_name": "worker1",
-        "worker_password": "x"
-      }
-    ]]
+    "params": []
   }
 }
 
@@ -234,7 +217,7 @@ Custom alerts can be configured, including:
 A mock server is provided for testing without physical hardware:
 
 ```bash
-node mock/server.js
+node mock/server.js --type A1346
 ```
 
 The mock server simulates Avalon protocol responses for all supported commands.

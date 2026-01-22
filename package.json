@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@bitfinex/lib-js-util-base": "git+https://github.com/bitfinexcom/lib-js-util-base.git",
-    "@bitfinex/lib-js-util-promise": "git+https://github.com/bitfinexcom/lib-js-util-promise",
+    "@bitfinex/lib-js-util-promise": "git+https://github.com/bitfinexcom/lib-js-util-promise.git",
     "brittle": "3.16.3",
     "debug": "4.4.1",
     "miningos-mock-control-service": "git+https://github.com/tetherto/miningos-mock-control-service.git",
