@@ -81,6 +81,61 @@ class AvalonMinerNano3s extends AvalonMiner {
     return parsedData
   }
 
+  // Nano 3S firmware uses ascset|0,workmode,set,<mode> (extra 'set,' param)
+  // Modes: low=0, mid=1, high=2
+  async setPowerMode (mode) {
+    const isResOk = (d) => d && d.STATUS === 'S'
+    let command
+    switch (mode) {
+      case 'sleep':
+        command = 'ascset|0,softoff'
+        break
+      case 'low':
+        command = 'ascset|0,workmode,set,0'
+        break
+      case 'mid':
+        command = 'ascset|0,workmode,set,1'
+        break
+      case 'high':
+        command = 'ascset|0,workmode,set,2'
+        break
+      default:
+        throw new Error('ERR_INVALID_MODE')
+    }
+
+    this._sendCommand(command)
+      .then(async response => {
+        const parsedData = utils.parseAvalonResponseString(response)
+        if (!isResOk(parsedData)) {
+          return this.debugError('setPowerMode failed', parsedData)
+        }
+        if (mode !== 'sleep') await this.reboot()
+      })
+      .catch(e => this.debugError('setPowerMode failed', e))
+  }
+
+  validateWriteAction (...params) {
+    const [action, ...args] = params
+    if (action === 'setPowerMode') {
+      const [mode] = args
+      if (!['sleep', 'low', 'mid', 'high'].includes(mode)) {
+        throw new Error('ERR_SET_POWER_MODE_INVALID')
+      }
+      return 1
+    }
+    return super.validateWriteAction(...params)
+  }
+
+  // Nano 3S: workmode 0=low, 1=mid, 2=high
+  _getPowerMode (estats) {
+    if (estats.soft_off !== '0') return 'sleep'
+    switch (estats.work_mode) {
+      case '2': return 'high'
+      case '1': return 'mid'
+      default: return 'low'
+    }
+  }
+
   // Nano 3S has 1 hashboard — override to avoid accessing board indices 1 and 2
   async _prepSnap () {
     const data = await async.parallelLimit({
