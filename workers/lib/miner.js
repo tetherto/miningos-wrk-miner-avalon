@@ -469,7 +469,7 @@ class AvalonMiner extends BaseMiner {
         code: data.estats?.error_code
       })
     }
-    if (data.estats.psu_status !== '0') {
+    if (data.estats.psu_status != null && data.estats.psu_status !== '0') {
       errors.push({
         name: 'power_error_status',
         message: 'Power supply error',
