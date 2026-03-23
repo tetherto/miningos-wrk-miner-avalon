@@ -114,6 +114,50 @@ class AvalonMinerNano3s extends AvalonMiner {
       .catch(e => this.debugError('setPowerMode failed', e))
   }
 
+  // Nano 3S uses top-level setpool command, not ascset|0,setpool
+  // Format: setpool|<username>,<userpass>,<poolnum>,<pooladdr>,<worker>,<workerpasswd>
+  async setPools (pools, appendId = true) {
+    const isResOk = (d) => d && (d.STATUS === 'S' || d.STATUS === 'I')
+    let oldPools = await this.getPools()
+
+    oldPools = oldPools.map((pool) => ({
+      ...pool,
+      username: pool.user
+    }))
+
+    const dummyPool = 'dummy'
+    while (pools.length < 3) {
+      pools.push({
+        url: `stratum+tcp://${dummyPool}`,
+        worker_name: dummyPool,
+        worker_password: dummyPool
+      })
+    }
+
+    pools = this._prepPools(pools, appendId, oldPools)
+
+    if (pools === false) {
+      this.debugError('Pools are same, skipping')
+      return { success: true, message: 'Pools are same, skipping' }
+    }
+
+    const instance = this
+    const responses = await async.parallelLimit(
+      pools.map((pool, index) => {
+        return async () => {
+          const response = await instance._sendCommand(`setpool|admin,${instance.opts.password || 'admin'},${index},${pool.url},${pool.worker_name},${pool.worker_password}`)
+          return utils.parseAvalonResponseString(response)
+        }
+      }),
+      3
+    )
+
+    this.debugError(`setPools allOk: ${responses.every(isResOk)}`)
+    await this.reboot()
+
+    return { success: responses.every(isResOk) }
+  }
+
   validateWriteAction (...params) {
     const [action, ...args] = params
     if (action === 'setPowerMode') {
