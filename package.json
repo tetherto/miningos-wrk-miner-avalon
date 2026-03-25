@@ -1,6 +1,6 @@
 {
-  "name": "miningos-wrk-miner-avalon",
-  "version": "0.0.1",
+  "name": "@tetherto/miningos-wrk-miner-avalon",
+  "version": "1.0.0",
   "description": "MiningOS Worker Miner Avalon",
   "keywords": [
     "tether"
@@ -11,8 +11,22 @@
     "type": "git",
     "url": "git+https://github.com/tetherto/miningos-wrk-miner-avalon.git"
   },
-  "engine": {
-    "node": ">=20.0"
+  "homepage": "https://github.com/tetherto/miningos-wrk-miner-avalon#readme",
+  "bugs": {
+    "url": "https://github.com/tetherto/miningos-wrk-miner-avalon/issues"
+  },  
+  "engines": {
+    "node": ">=20"
+  },
+  "files": [
+    "worker.js",
+    "workers/",
+    "mock/"
+  ],
+  "main": "worker.js",  
+  "type": "commonjs",
+  "bin": {
+    "miningos-wrk-miner-avalon": "worker.js"
   },
   "scripts": {
     "lint": "standard",
