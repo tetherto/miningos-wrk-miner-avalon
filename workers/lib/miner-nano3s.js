@@ -82,7 +82,7 @@ class AvalonMinerNano3s extends AvalonMiner {
   }
 
   // Nano 3S firmware uses ascset|0,workmode,set,<mode> (extra 'set,' param)
-  // Modes: low=0, mid=1, high=2
+  // Modes: low=0, normal=1, high=2
   async setPowerMode (mode) {
     const isResOk = (d) => d && d.STATUS === 'S'
     let command
@@ -93,7 +93,7 @@ class AvalonMinerNano3s extends AvalonMiner {
       case 'low':
         command = 'ascset|0,workmode,set,0'
         break
-      case 'mid':
+      case 'normal':
         command = 'ascset|0,workmode,set,1'
         break
       case 'high':
@@ -162,7 +162,7 @@ class AvalonMinerNano3s extends AvalonMiner {
     const [action, ...args] = params
     if (action === 'setPowerMode') {
       const [mode] = args
-      if (!['sleep', 'low', 'mid', 'high'].includes(mode)) {
+      if (!['sleep', 'low', 'normal', 'high'].includes(mode)) {
         throw new Error('ERR_SET_POWER_MODE_INVALID')
       }
       return 1
@@ -170,12 +170,12 @@ class AvalonMinerNano3s extends AvalonMiner {
     return super.validateWriteAction(...params)
   }
 
-  // Nano 3S: workmode 0=low, 1=mid, 2=high
+  // Nano 3S: workmode 0=low, 1=normal, 2=high
   _getPowerMode (estats) {
     if (estats.soft_off !== '0') return 'sleep'
     switch (estats.work_mode) {
       case '2': return 'high'
-      case '1': return 'mid'
+      case '1': return 'normal'
       default: return 'low'
     }
   }
