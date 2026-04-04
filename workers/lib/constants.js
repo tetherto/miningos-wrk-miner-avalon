@@ -1,7 +1,8 @@
 'use strict'
 
 const DEFAULT_NOMINAL_EFFICIENCY_WTHS = {
-  'miner-av-a1346': 30
+  'miner-av-a1346': 30,
+  'miner-av-nano3s': 23
 }
 
 module.exports = {

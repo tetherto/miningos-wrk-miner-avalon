@@ -34,6 +34,10 @@ class WrkMinerRack extends WrkRack {
     return super.getNominalEficiencyWThs(DEFAULT_NOMINAL_EFFICIENCY_WTHS)
   }
 
+  createMiner (opts) {
+    return new Miner(opts)
+  }
+
   async collectThingSnap (thg) {
     return thg.ctrl.getSnap()
   }
@@ -43,7 +47,7 @@ class WrkMinerRack extends WrkRack {
       return 0
     }
 
-    const miner = new Miner({
+    const miner = this.createMiner({
       ...thg.opts,
       socketer: {
         readStrategy: TcpFacility.TCP_READ_STRATEGY.ON_END,
