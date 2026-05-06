@@ -2,7 +2,7 @@
 
 const test = require('brittle')
 const AvalonMiner = require('../../workers/lib/miner')
-const { STATUS, POWER_MODE } = require('miningos-tpl-wrk-miner/workers/lib/constants')
+const { STATUS, POWER_MODE } = require('@tetherto/miningos-tpl-wrk-miner/workers/lib/constants')
 const crypto = require('crypto')
 
 const password = crypto.randomBytes(4).toString('base64').replace(/[^a-z0-9]/gi, '').slice(0, 4)
