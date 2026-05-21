@@ -1,10 +1,10 @@
 'use strict'
 
-const BaseMiner = require('miningos-tpl-wrk-miner/workers/lib/base')
+const BaseMiner = require('@tetherto/miningos-tpl-wrk-miner/workers/lib/base')
 const utils = require('./utils')
 const async = require('async')
 const assert = require('assert')
-const { STATUS, POWER_MODE } = require('miningos-tpl-wrk-miner/workers/lib/constants')
+const { STATUS, POWER_MODE } = require('@tetherto/miningos-tpl-wrk-miner/workers/lib/constants')
 
 function isResOk (res) {
   return res.Code === '119' || res.Code === '118'
