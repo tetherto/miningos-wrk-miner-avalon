@@ -45,6 +45,13 @@ const execute = async () => {
     }
     // Give time for connections to close
     await new Promise(resolve => setTimeout(resolve, 2000))
+    // `brittle --coverage` writes its report on the 'beforeExit' event, which
+    // process.exit() skips. Flush those listeners so coverage-final.json is
+    // produced (a 2-min setLED timer otherwise keeps the process from exiting
+    // on its own).
+    for (const listener of process.listeners('beforeExit')) {
+      await listener(0)
+    }
     process.exit(0)
   }
 }
