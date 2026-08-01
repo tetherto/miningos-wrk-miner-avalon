@@ -427,6 +427,11 @@ class AvalonMiner extends BaseMiner {
     return parsedData.map((value) => parseInt(value, 10))
   }
 
+  async updateFirmware (firmware) {
+    // no-op: Avalon firmware update is not supported via RPC yet
+    return { success: true }
+  }
+
   _prepErrors (data) {
     const errors = []
     if (data.pools.every(p => p.status === 'Dead')) {
