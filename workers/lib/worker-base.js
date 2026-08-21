@@ -43,12 +43,15 @@ class WrkMinerRack extends WrkRack {
   }
 
   async connectThing (thg) {
-    if (!thg.opts.address || !thg.opts.port || !thg.opts.password) {
+    const { username, password } = this._getThingCredentials(thg)
+    if (!thg.opts.address || !thg.opts.port || !password) {
       return 0
     }
 
     const miner = this.createMiner({
       ...thg.opts,
+      username,
+      password,
       socketer: {
         readStrategy: TcpFacility.TCP_READ_STRATEGY.ON_END,
         rpc: (opts) => {
